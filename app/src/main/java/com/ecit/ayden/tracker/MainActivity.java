@@ -1,11 +1,7 @@
 package com.ecit.ayden.tracker;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
@@ -13,13 +9,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import com.ecit.ayden.tracker.ui.InitializeDialog;
 
 public class MainActivity extends AppCompatActivity {
 
     // Dialog for initializing the user use this app first time.
     private InitializeDialog dialog = null;
     private BroadcastReceiver InitializingReceiver = null;
-
     private Button start = null;
 
     @Override
@@ -53,24 +49,3 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 
-class InitializeDialog extends DialogFragment {
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-        builder.setView(R.layout.register_dialog);
-        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
-        return builder.create();
-    }
-}

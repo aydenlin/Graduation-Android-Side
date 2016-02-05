@@ -12,16 +12,16 @@ import java.util.concurrent.ArrayBlockingQueue;
 /**
  * Created by ayden on 1/31/16.
  */
-public class PacketSpace {
+public class  PacketSpace {
 
     private PsWorker psWorker = new PsWorker();
     /* STATUS is true if its in connected state, false in another case */
     private boolean STATUS = false;
-    public static final int capacity = 100;
-    public static final int certifiCapacity = 10;
-    public static ArrayBlockingQueue<Packet> sendQueue = new ArrayBlockingQueue<Packet>(capacity);
-    public static ArrayBlockingQueue<Packet> recvQueue = new ArrayBlockingQueue<Packet>(capacity);
-    public static ArrayBlockingQueue<Packet> certifiQueue = new ArrayBlockingQueue<Packet>(certifiCapacity);
+    private static final int capacity = 100;
+    private static final int certifiCapacity = 10;
+    private static ArrayBlockingQueue<Packet> sendQueue = new ArrayBlockingQueue<Packet>(capacity);
+    private static ArrayBlockingQueue<Packet> recvQueue = new ArrayBlockingQueue<Packet>(capacity);
+    private static ArrayBlockingQueue<Packet> certifiQueue = new ArrayBlockingQueue<Packet>(certifiCapacity);
 
     public static int isSomethingInSend() {
         return sendQueue.size();
@@ -80,7 +80,7 @@ public class PacketSpace {
             while (true) {
                 if (!isSendEmpty()) {
                     /* Do serveral packet at a time */
-                    if (isSomethingInSend() == NetworkService.getBatch() && NetworkService.isIdle)
+                    if (isSomethingInSend() == NetworkService.getBatch() && NetworkService.isIdle())
                         ThreadPool.Interrupt(ThreadPool.NETWORK_THREAD);
                 }
                 if (!isRecvEmpty()) {
@@ -94,7 +94,7 @@ public class PacketSpace {
                 }
                 if (!isCertifiEmpty()) {
                     /* Something in CertifiQueue */
-                    if (NetworkService.isIdle)
+                    if (NetworkService.isIdle())
                         ThreadPool.Interrupt(ThreadPool.NETWORK_THREAD);
                 }
                 try {

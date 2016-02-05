@@ -54,7 +54,7 @@ public class CoreService extends Service {
     private void certificationStart(String userName) {
         TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         String imei = tm.getDeviceId();
-        PacketTransfer.CerPacket(userName, imei);
+        Packer.CerPacket(userName, imei);
     }
 
 
@@ -186,25 +186,5 @@ class LocProvider {
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
         option.setScanSpan(span);
         locationClient.setLocOption(option);
-    }
-}
-
-/*
-  * A function set include functions
-  * that use to transfer data into raw bits.
-  * and order, packet  the bits by byte by the meaning of it.
-  */
-class PacketTransfer {
-     // Location packet function.
-     public static Packet locPacket(double longtitude, double latitude) {
-         Packet packet = null;
-
-         return packet;
-     }
-
-    // Certification data packet function.
-    public static Packet CerPacket(String userName, String password) {
-        Packet packet = null;
-        return packet;
     }
 }
