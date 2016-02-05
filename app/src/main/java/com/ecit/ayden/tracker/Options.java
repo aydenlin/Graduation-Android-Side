@@ -5,10 +5,9 @@ package com.ecit.ayden.tracker;
  */
 
 public class Options {
-    // NetworkService's RecHandler's options
-    public static final int NET_LINKING = 1;
-    public static final int NET_TASK_POSTING = 2;
+    // Certtification Options
+    public static final int CERTIFICATION_START = 0x01;
     // Bind Options
-    public static final int BIND_SERVICE = 3;
-    public static final int BIND_MESSENGER = 4;
+    public static final int BIND_SERVICE = 0x01;
+    public static final int BIND_MESSENGER = 0x02;
 }

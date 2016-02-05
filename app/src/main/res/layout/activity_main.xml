@@ -7,8 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.ecit.ayden.tracker.MainActivity"
-    android:background="#908989">
+    tools:context="com.ecit.ayden.tracker.MainActivity">
 
     <Button
         android:layout_width="wrap_content"
@@ -16,18 +15,9 @@
         android:text="Start"
         android:id="@+id/button"
         style="@style/Base.Widget.AppCompat.Button.Borderless"
-        android:textSize="@dimen/abc_action_bar_progress_bar_size"
+        android:textSize="50dp"
         android:textColor="#0004ff"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="212dp" />
-
-    <EditText
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/editText"
-        android:layout_above="@+id/button"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
