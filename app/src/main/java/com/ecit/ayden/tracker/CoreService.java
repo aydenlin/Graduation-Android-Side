@@ -75,7 +75,7 @@ public class CoreService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return mMessenger.getBinder();
+        return null;
     }
 
     @Override
