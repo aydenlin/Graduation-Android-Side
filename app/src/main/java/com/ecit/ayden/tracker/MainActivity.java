@@ -9,12 +9,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import com.ecit.ayden.tracker.ui.InitializeDialog;
+import com.ecit.ayden.tracker.ui.RegisterDialog;
 
 public class MainActivity extends AppCompatActivity {
 
     // Dialog for initializing the user use this app first time.
-    private InitializeDialog dialog = null;
+    private RegisterDialog dialog = null;
     private BroadcastReceiver InitializingReceiver = null;
     private Button start = null;
 
@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         InitializingReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                dialog = new InitializeDialog();
+                dialog = new RegisterDialog();
                 dialog.show(getFragmentManager(), "Initializing");
             }
         };
