@@ -9,14 +9,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import com.ecit.ayden.tracker.ui.RegisterDialog;
+import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
     // Dialog for initializing the user use this app first time.
-    private RegisterDialog dialog = null;
-    private BroadcastReceiver InitializingReceiver = null;
+    private BroadcastReceiver debugReceiver = null;
     private Button start = null;
+    private Button register = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Start Button.
-        start = (Button) findViewById(R.id.button);
+        start = (Button) findViewById(R.id.startButton);
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -33,11 +34,30 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        InitializingReceiver = new BroadcastReceiver() {
+        register = (Button)findViewById(R.id.registerButton);
+        register.setOnClickListener(new View.OnClickListener() {
+            EditText editUser = (EditText)findViewById(R.id.editUser);
+            EditText editPass = (EditText)findViewById(R.id.editPassword);
+            EditText editRetype = (EditText)findViewById(R.id.editPassRe);
+            String username = null;
+            String password = null;
+            @Override
+            public void onClick(View v) {
+                username = editUser.getText().toString();
+                password = editPass.getText().toString();
+                if (password != editRetype.getText().toString()) {
+                    Toast.makeText(MainActivity.this, "password you enter is different in two times", Toast.LENGTH_SHORT).show();
+                } else {
+                    Certification.setUsername(username);
+                    Certification.setPassword(password);
+                }
+            }
+        });
+
+        debugReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                dialog = new RegisterDialog();
-                dialog.show(getFragmentManager(), "Initializing");
+                Toast.makeText(MainActivity.this, intent.getDataString(), Toast.LENGTH_SHORT).show();
             }
         };
     }
@@ -45,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        LocalBroadcastManager.getInstance(this).registerReceiver(InitializingReceiver, new IntentFilter(CoreService.CoreServiceFilter));
+        LocalBroadcastManager.getInstance(this).
+                registerReceiver(debugReceiver, new IntentFilter(CoreService.CoreServiceDebugFilter));
     }
 }
-

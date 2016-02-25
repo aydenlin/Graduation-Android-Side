@@ -13,11 +13,55 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Start"
-        android:id="@+id/button"
+        android:id="@+id/startButton"
         style="@style/Base.Widget.AppCompat.Button.Borderless"
         android:textSize="50dp"
         android:textColor="#0004ff"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="92dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editUser"
+        android:layout_marginTop="89dp"
+        android:hint="user name"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/editPassword"
+        android:layout_alignEnd="@+id/editPassword"
+        android:layout_alignLeft="@+id/editPassword"
+        android:layout_alignStart="@+id/editPassword" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editPassword"
+        android:layout_below="@+id/editUser"
+        android:hint="password"
+        android:layout_alignLeft="@+id/editPassRe"
+        android:layout_alignStart="@+id/editPassRe"
+        android:layout_alignRight="@+id/editPassRe"
+        android:layout_alignEnd="@+id/editPassRe"
+        android:password="true"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editPassRe"
+        android:hint="retype your pass"
+        android:layout_below="@+id/editPassword"
+        android:layout_centerHorizontal="true"
+        android:password="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Register"
+        android:id="@+id/registerButton"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        style="@style/Base.Widget.AppCompat.Button.Borderless"
+        android:textSize="20dp" />
 
 </RelativeLayout>

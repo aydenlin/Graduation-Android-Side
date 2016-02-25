@@ -7,26 +7,23 @@ import java.util.concurrent.ArrayBlockingQueue;
  */
 public class  PacketSpace {
 
-    /* STATUS is true if its in connected state, false in another case */
-    private boolean STATUS = false;
     private static final int capacity = 100;
-    private static final int certifiCapacity = 10;
-    private static ArrayBlockingQueue<byte[]> sendQueue = new ArrayBlockingQueue<byte[]>(capacity);
+    private static ArrayBlockingQueue<byte[]> Queue = new ArrayBlockingQueue<byte[]>(capacity);
 
     public static int isSomethingInSend() {
-        return sendQueue.size();
+        return Queue.size();
     }
 
     public static boolean isSendEmpty() {
-        return sendQueue.isEmpty();
+        return Queue.isEmpty();
     }
 
-    public static void sendQueueAdd(byte[] p) {
-        sendQueue.add(p);
+    public static void QueueAdd(byte[] p) {
+        Queue.add(p);
     }
 
-    public static byte[] sendQueueRetrive() {
-        return sendQueue.poll();
+    public static byte[] QueueRetrive() {
+        return Queue.poll();
     }
 }
 

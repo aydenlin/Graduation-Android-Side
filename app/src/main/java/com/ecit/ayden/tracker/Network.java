@@ -22,7 +22,7 @@ public class Network {
     private static Socket socket = null;
     private static InputStream in = null;
     private static OutputStream out = null;
-    private static InetSocketAddress sockaddr  = new InetSocketAddress(ServerAddress, ServerPort);;
+    private static InetSocketAddress sockaddr  = new InetSocketAddress(ServerAddress, ServerPort);
 
     public Network() {
         mode = PRIORITY_MODE;
@@ -71,17 +71,25 @@ public class Network {
             connecting();
     }
 
-    public void read() throws IOException {
+    public void read(byte[] packet) {
         if (in != null) {
             byte[] result = new byte[Packer.MAX_LENGTH_OF_PACKET];
-            in.read(result);
-            CoreService.CommandDeal(result);
+            try {
+                in.read(result);
+            } catch (IOException e) {
+                /*
+                 * codes deal with IOException we should
+                 * deal with IOException in read method and
+                 * it give a clean and easy to use interface to
+                 * upper level.
+                 */
+            }
         } else {
-            throw (new IOException("InputStream object is null"));
+            /* Method of in is non-initilize */
         }
     }
 
-    public void write() {
+    public void write(byte[] packet) {
         if (out == null) {
             if (mode == NORMAL_MODE) {
             /*
@@ -94,6 +102,8 @@ public class Network {
                  * In PRIORITY_MODE Network module will send
                  * certification info in Certification module to Server.
                  */
+            } else {
+                /* mode number is undefined */
             }
         } else {
             /* OutputStream object is null, write is impossible. */

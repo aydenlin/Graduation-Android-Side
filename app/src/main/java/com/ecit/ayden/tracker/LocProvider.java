@@ -13,12 +13,13 @@ import com.baidu.location.LocationClientOption;
   */
 public class LocProvider {
 
+    // true if locating started, in another case locating stopd.
     private boolean alreadyStarted = false;
 
-    private LocationClient locationClient;
-    private BDLocationListener mListener;
-    private double latitude;
-    private double longtitude;
+    private LocationClient locationClient = null;
+    private BDLocationListener mListener = null;
+    private double latitude = 0;
+    private double longtitude = 0;
 
     public void start(Context context) {
         locationClient = new LocationClient(context);
@@ -46,13 +47,15 @@ public class LocProvider {
             longtitude = location.getLongitude();
             latitude = location.getLatitude();
             byte[] locPackert = Packer.locPacket(longtitude, latitude);
-            PacketSpace.sendQueueAdd(locPackert);
+            PacketSpace.QueueAdd(locPackert);
         }
     }
 
     private void setOptions() {
+        // locate every 10 sec.
         int span = 10000;
         LocationClientOption option = new LocationClientOption();
+        // In Hight accuracy mode, gps, data traffic, will be used.
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
         option.setScanSpan(span);
         locationClient.setLocOption(option);

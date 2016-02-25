@@ -9,6 +9,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.TelephonyManager;
 
+import java.io.File;
+
 /**
  * Created by ayden on 1/29/16.
  */
@@ -21,21 +23,21 @@ public class CoreService extends Service {
       * IntentFilter for other components to recognize brocast
       * from CoreService and Key to get data from intent.
       */
-    public static final String CoreServiceFilter = "com.ecit.ayden.tracker.CoreService.INITIALIZING";
     public static final String CoreServiceKey = "com.ecit.ayden.tracker.CoreService.MESSAGE";
-
+    public static final String CoreServiceDebugFilter = "com.ecit.ayden.tracker.coreService.DEBUG";
     //Messenger for communication between MainActivity and CoreService.
     private Messenger messenger = null;
 
     // BroadcastManager  use to  send intent to UI thread and make changes on UI
-    LocalBroadcastManager localBroadcastManager = null;
+    private static LocalBroadcastManager localBroadcastManager = null;
 
     private LocProvider locProvider = null;
     private Certification certification = null;
     private Network network = null;
+    private Thread worker = null;
 
-    private void send(String message) {
-        Intent intent = new Intent(CoreServiceFilter);
+    public void send(String message, String intent_) {
+        Intent intent = new Intent(intent_);
         if (message != null)
             intent.putExtra(CoreServiceKey, message);
         localBroadcastManager.sendBroadcast(intent);
@@ -46,25 +48,7 @@ public class CoreService extends Service {
         locProvider = new LocProvider();
         network = new Network();
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
-    }
-
-    /*
- * CommandDeal is use to perform the operation specify
- * by Packet received.
- */
-    public static void CommandDeal(byte[] packet) {
-        byte type = Packer.getType(packet);
-
-        switch(type) {
-            case Packer.NEED_REGISTER:
-                break;
-            case Packer.NAME_ALREADY_USED:
-                break;
-            case Packer.PASSWORD_ERROR:
-                break;
-            case Packer.CONFIRMED:
-                break;
-        }
+        worker = new Thread(new Worker(this ,network, certification));
     }
 
     @Nullable
