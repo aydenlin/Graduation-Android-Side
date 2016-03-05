@@ -11,11 +11,6 @@ import java.net.Socket;
  */
 public class Network {
 
-    private static final byte NORMAL_MODE = 0x01;
-    private static final byte PRIORITY_MODE = 0x02;
-    private byte mode = 0x00;
-
-    private static boolean Started = false;
     private static boolean connected = false;
     private static final String ServerAddress = "121.40.234.38";
     private static final int ServerPort = 1555;
@@ -23,11 +18,6 @@ public class Network {
     private static InputStream in = null;
     private static OutputStream out = null;
     private static InetSocketAddress sockaddr  = new InetSocketAddress(ServerAddress, ServerPort);
-
-    public Network() {
-        mode = PRIORITY_MODE;
-
-    }
 
     public static Socket getSocket() {
         return socket;
@@ -71,9 +61,9 @@ public class Network {
             connecting();
     }
 
-    public void read(byte[] packet) {
+    public byte[] read() {
+        byte[] result = new byte[Packer.MAX_LENGTH_OF_PACKET];
         if (in != null) {
-            byte[] result = new byte[Packer.MAX_LENGTH_OF_PACKET];
             try {
                 in.read(result);
             } catch (IOException e) {
@@ -83,27 +73,20 @@ public class Network {
                  * it give a clean and easy to use interface to
                  * upper level.
                  */
+                e.printStackTrace();
             }
         } else {
             /* Method of in is non-initilize */
         }
+        return result;
     }
 
     public void write(byte[] packet) {
         if (out == null) {
-            if (mode == NORMAL_MODE) {
-            /*
-             * In NORMAL_MODE Network module just
-             * easily send location packet to Server.
-             */
-
-            } else if (mode == PRIORITY_MODE) {
-                /*
-                 * In PRIORITY_MODE Network module will send
-                 * certification info in Certification module to Server.
-                 */
-            } else {
-                /* mode number is undefined */
+            try {
+                out.write(packet);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         } else {
             /* OutputStream object is null, write is impossible. */

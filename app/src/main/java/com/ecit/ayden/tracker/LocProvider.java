@@ -20,8 +20,13 @@ public class LocProvider {
     private BDLocationListener mListener = null;
     private double latitude = 0;
     private double longtitude = 0;
+    private Context context = null;
 
-    public void start(Context context) {
+    public LocProvider(Context context_) {
+        context = context_;
+    }
+
+    public void start() {
         locationClient = new LocationClient(context);
         mListener = new MyLocationListener();
         locationClient.registerLocationListener(mListener);

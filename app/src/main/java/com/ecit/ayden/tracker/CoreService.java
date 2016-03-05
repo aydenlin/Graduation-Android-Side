@@ -45,10 +45,10 @@ public class CoreService extends Service {
 
     private void Initializing() {
         certification = new Certification((TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE));
-        locProvider = new LocProvider();
+        locProvider = new LocProvider(CoreService.this);
         network = new Network();
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
-        worker = new Thread(new Worker(this ,network, certification));
+        worker = new Thread(new Worker(this ,network, certification, locProvider));
     }
 
     @Nullable

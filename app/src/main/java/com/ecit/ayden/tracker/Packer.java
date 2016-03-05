@@ -8,26 +8,39 @@ package com.ecit.ayden.tracker;
 public class Packer {
 
     public static final int MAX_LENGTH_OF_PACKET = 1024;
-    public static final int COMMAND_LENGTH = 1;
+    public static final int TYPE_FRAME_LENGTH = 1;
+    public static final int IMEI_LENGTH = 15;
+    public static final int USERNAME_LENGTH = 5;
+    public static final int PASSWORD_LENGTH = 6;
     // packet type constants.
-    public static final byte NAME_ALREADY_USED = 0X01;
-    public static final byte PASSWORD_ERROR = 0x02;
-    public static final byte CONFIRMED = 0x03;
+    public static final byte CERTIFICATION_PACKET = 0x01;
+    public static final byte LOCATION_PACKET = 0x02;
+    public static final byte RECONNECT = 0X03;
+    public static final byte NAME_ALREADY_USED = 0x04;
+    public static final byte PASSWORD_ERROR = 0x05;
+    public static final byte CONFIRMED = 0x06;
+    public static final byte NO_EXIST = 0x07;
 
     // Location package function.
     public static byte[] locPacket(double longtitude, double latitude) {
         byte[] longtitude_b = Tools.double2byteA(longtitude);
         byte[] latitude_b = Tools.double2byteA(latitude);
-        byte[] packet = new byte[longtitude_b.length + latitude_b.length];
+        byte[] packet = new byte[TYPE_FRAME_LENGTH + longtitude_b.length + latitude_b.length];
 
-        System.arraycopy(longtitude_b, 0, packet, 0, longtitude_b.length);
-        System.arraycopy(latitude_b, 0, packet, longtitude_b.length, latitude_b.length);
+        packet[0] = LOCATION_PACKET;
+        System.arraycopy(longtitude_b, 0, packet, TYPE_FRAME_LENGTH, longtitude_b.length);
+        System.arraycopy(latitude_b, 0, packet, longtitude_b.length + TYPE_FRAME_LENGTH, latitude_b.length);
         return packet;
     }
 
-    public static byte[] userAndPassPacket(String username, String password) {
-        byte[] packet = null;
+    public static byte[] userAndPassPacket(String username, String password, String imei) {
+        byte[] packet = new byte[TYPE_FRAME_LENGTH + USERNAME_LENGTH + PASSWORD_LENGTH + IMEI_LENGTH];
+        packet[0] = CERTIFICATION_PACKET;
 
+        System.arraycopy(username.getBytes(), 0, packet, TYPE_FRAME_LENGTH, USERNAME_LENGTH);
+        System.arraycopy(password.getBytes(), 0, packet, TYPE_FRAME_LENGTH + USERNAME_LENGTH, PASSWORD_LENGTH);
+        System.arraycopy(imei.getBytes(), 0, packet, TYPE_FRAME_LENGTH + USERNAME_LENGTH + PASSWORD_LENGTH,
+                IMEI_LENGTH);
         return packet;
     }
 

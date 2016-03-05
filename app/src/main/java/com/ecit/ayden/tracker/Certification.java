@@ -2,9 +2,13 @@ package com.ecit.ayden.tracker;
 
 import android.telephony.TelephonyManager;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 
 /*
  * An object that holds information of such things that
@@ -29,18 +33,37 @@ public class Certification {
             return false;
     }
 
-    public void save() throws IOException {
+    public void save() {
         File file = new File(CERTIFICATION_PATH);
         String newLine = "\n";
-        if (!file.exists())
-            file.createNewFile();
-        FileOutputStream out = new FileOutputStream(file);
-        out.write(username.getBytes());
-        out.write(newLine.getBytes());
-        out.write(password.getBytes());
+        try {
+            if (!file.exists())
+                file.createNewFile();
+            FileOutputStream out = new FileOutputStream(file);
+            out.write(username.getBytes());
+            out.write(newLine.getBytes());
+            out.write(password.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public boolean check() {
+    public void load() {
+        File file = new File(CERTIFICATION_PATH);
+
+        try {
+            FileReader fileReader = new FileReader(file);
+            BufferedReader bin = new BufferedReader(fileReader);
+            if (check_file_exist()) {
+                username = bin.readLine();
+                password = bin.readLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean check_file_exist() {
         File file = new File(CERTIFICATION_PATH);
         if (file.exists()) {
             return true;
@@ -59,19 +82,11 @@ public class Certification {
         }
     }
 
-    public static void setUsername(String username_) {
-        username = username_;
-    }
+    public static void setUsername(String username_) { username = username_; }
 
-    public static String getUsername() {
-        return username;
-    }
+    public static String getUsername() { return username; }
 
-    public static void setPassword(String password_) {
-        password = password_;
-    }
+    public static void setPassword(String password_) { password = password_; }
 
-    public static String getPassword() {
-        return password;
-    }
+    public static String getPassword() { return password; }
 }
