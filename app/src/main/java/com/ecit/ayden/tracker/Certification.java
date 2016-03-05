@@ -18,7 +18,8 @@ public class Certification {
 
     private static String username = null;
     private static String password = null;
-    private static String IMEI = null; 
+    private static String IMEI = null;
+    private static byte tempID = 0x00;
     private static final String CERTIFICATION_PATH = "/sdcard/Tracker/Certification_info";
 
     private TelephonyManager tm;
@@ -81,6 +82,10 @@ public class Certification {
             throw se;
         }
     }
+
+    public static void setTempID(byte tempID_) { tempID = tempID_; }
+
+    public static byte getTempID() { return tempID; }
 
     public static void setUsername(String username_) { username = username_; }
 

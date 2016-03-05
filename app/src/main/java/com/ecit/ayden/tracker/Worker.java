@@ -20,42 +20,27 @@ class Worker implements Runnable {
         locProvider = locProvider_;
     }
 
-    /*
-     * check() method should confirm username and password
-     * is match with server's.
-     */
-    private boolean check() {
-        byte[] receive = null;
-
-        certification.load();
-        network.write(Packer.userAndPassPacket(certification.getUsername(), certification.getPassword(), certification.getIMEI()));
-        receive = network.read();
-        if (Packer.getType(receive) == Packer.CONFIRMED)
-            return true;
-        else if (Packer.getType(receive) == Packer.PASSWORD_ERROR)
-            return false;
-        else if (Packer.getType(receive) == Packer.NAME_ALREADY_USED)
-            return false;
-        else if (Packer.getType(receive) == Packer.NO_EXIST)
-            return false;
-        else
-            return false;
-    }
-
-    private void register() {
+    private void authorize() {
         /* method of register */
+        byte flag = 0x00;
         byte[] fromServer = null;
         Redo:
         while (true) {
-            coreService.send("Please write down your info", coreService.CoreServiceDebugFilter);
-            // Loop to waiting for input.
-            while(certification.isNull()) {}
-            network.write(Packer.userAndPassPacket(certification.getUsername(), certification.getPassword(), certification.getIMEI()));
+            if (flag == 0x01) {
+                coreService.send("Please write down your info", coreService.CoreServiceDebugFilter);
+                // Loop to waiting for input.
+                while (certification.isNull()) {
+                }
+            }
+            network.write(Packer.userAndPass(certification.getUsername(), certification.getPassword(),
+                    certification.getIMEI()));
             fromServer = network.read();
             if (Packer.getType(fromServer) == Packer.NAME_ALREADY_USED ||
                     Packer.getType(fromServer) == Packer.PASSWORD_ERROR) {
+                flag = 0x01;
                 continue Redo;
             } else if (Packer.getType(fromServer) == Packer.CONFIRMED) {
+                certification.setTempID(fromServer[1]);
                 certification.save();
                 coreService.send("Confirmed", CoreService.CoreServiceDebugFilter);
                 return;
@@ -65,18 +50,9 @@ class Worker implements Runnable {
         }
     }
 
-    private void authorize() {
-        if (check()) {
-            return;
-        } else {
-            register();
-        }
-    }
-
     private void connect() {
         network.connecting();
     }
-
 
 
     private void work() {
