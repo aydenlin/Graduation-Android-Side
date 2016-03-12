@@ -6,11 +6,10 @@ package com.ecit.ayden.tracker;
  */
 class Worker implements Runnable {
 
-    private LocProvider locProvider = null;
-    private CoreService coreService = null;
-    private Network network = null;
-    private Certification certification = null;
-    private boolean pass = false;
+    private LocProvider locProvider;
+    private CoreService coreService;
+    private Network network;
+    private Certification certification;
 
     public Worker(CoreService coreService_, Network network_, Certification certification_,
                   LocProvider locProvider_) {
@@ -57,7 +56,7 @@ class Worker implements Runnable {
 
     private void work() {
         /* main working of worker thread */
-        locProvider.start();
+        locProvider.start(certification.getTempID());
         while (true) {
             network.write(PacketSpace.QueueRetrive());
             try {

@@ -14,10 +14,10 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Dialog for initializing the user use this app first time.
-    private BroadcastReceiver debugReceiver = null;
     private Button start = null;
     private Button register = null;
+    // Dialog for initializing the user use this app first time.
+    private BroadcastReceiver debugReceiver = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
                 if (password != editRetype.getText().toString()) {
                     Toast.makeText(MainActivity.this, "password you enter is different in two times", Toast.LENGTH_SHORT).show();
                 } else {
+                    /* I will deal with this via Binder */
                     Certification.setUsername(username);
                     Certification.setPassword(password);
                 }

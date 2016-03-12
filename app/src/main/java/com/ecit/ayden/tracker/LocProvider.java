@@ -14,24 +14,35 @@ import com.baidu.location.LocationClientOption;
 public class LocProvider {
 
     // true if locating started, in another case locating stopd.
-    private boolean alreadyStarted = false;
+    private boolean alreadyStarted;
+    private LocationClient locationClient;
+    private BDLocationListener mListener;
+    private double latitude;
+    private double longtitude;
+    private byte tempID;
 
-    private LocationClient locationClient = null;
-    private BDLocationListener mListener = null;
-    private double latitude = 0;
-    private double longtitude = 0;
-    private Context context = null;
-
-    public LocProvider(Context context_) {
-        context = context_;
-    }
-
-    public void start() {
+    public LocProvider(Context context) {
+        alreadyStarted = false;
         locationClient = new LocationClient(context);
         mListener = new MyLocationListener();
+        latitude = 0;
+        longtitude = 0;
+        tempID = 0;
+    }
+
+    public void start(byte id) {
+        setTempID(id);
         locationClient.registerLocationListener(mListener);
         setOptions();
         locatingStart();
+    }
+
+    public void setTempID(byte id) {
+        tempID = id;
+    }
+
+    public byte getTempID() {
+        return tempID;
     }
 
     public double getLongtitude() {
@@ -51,7 +62,7 @@ public class LocProvider {
         public void onReceiveLocation(BDLocation location) {
             longtitude = location.getLongitude();
             latitude = location.getLatitude();
-            byte[] locPackert = Packer.locPacket(longtitude, latitude);
+            byte[] locPackert = Packer.locPacket(longtitude, latitude, tempID);
             PacketSpace.QueueAdd(locPackert);
         }
     }

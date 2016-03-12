@@ -11,23 +11,32 @@ import java.net.Socket;
  */
 public class Network {
 
-    private static boolean connected = false;
     private static final String ServerAddress = "121.40.234.38";
     private static final int ServerPort = 1555;
-    private static Socket socket = null;
-    private static InputStream in = null;
-    private static OutputStream out = null;
-    private static InetSocketAddress sockaddr  = new InetSocketAddress(ServerAddress, ServerPort);
+    private  boolean connected;
+    private  Socket socket;
+    private  InputStream in;
+    private  OutputStream out;
+    private  InetSocketAddress sockaddr;
 
-    public static Socket getSocket() {
+
+    public Network() {
+        socket = new Socket();
+        connected = false;
+        in = null;
+        out =null;
+        sockaddr = new InetSocketAddress(ServerAddress, ServerPort);
+    }
+
+    public Socket getSocket() {
         return socket;
     }
 
-    public static InetSocketAddress getSockaddr() {
+    public InetSocketAddress getSockaddr() {
         return sockaddr;
     }
 
-    public static boolean isConnected() {
+    public boolean isConnected() {
         return connected;
     }
 

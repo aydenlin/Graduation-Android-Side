@@ -4,11 +4,9 @@ import android.telephony.TelephonyManager;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 
 /*
  * An object that holds information of such things that
@@ -16,15 +14,19 @@ import java.io.InputStream;
  */
 public class Certification {
 
-    private static String username = null;
-    private static String password = null;
-    private static String IMEI = null;
-    private static byte tempID = 0x00;
-    private static final String CERTIFICATION_PATH = "/sdcard/Tracker/Certification_info";
-
+    private final String CERTIFICATION_PATH = "/sdcard/Tracker/Certification_info";
+    private String username;
+    private String password;
+    private String IMEI;
+    private static byte tempID;
     private TelephonyManager tm;
+
     public Certification(TelephonyManager tm_) {
         tm = tm_;
+        username = null;
+        password = null;
+        IMEI = null;
+        tempID = 0x00;
     }
 
     public boolean isNull() {
@@ -83,15 +85,15 @@ public class Certification {
         }
     }
 
-    public static void setTempID(byte tempID_) { tempID = tempID_; }
+    public void setTempID(byte tempID_) { tempID = tempID_; }
 
-    public static byte getTempID() { return tempID; }
+    public byte getTempID() { return tempID; }
 
-    public static void setUsername(String username_) { username = username_; }
+    public void setUsername(String username_) { username = username_; }
 
-    public static String getUsername() { return username; }
+    public String getUsername() { return username; }
 
-    public static void setPassword(String password_) { password = password_; }
+    public void setPassword(String password_) { password = password_; }
 
-    public static String getPassword() { return password; }
+    public String getPassword() { return password; }
 }
