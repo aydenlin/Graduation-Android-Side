@@ -1,6 +1,7 @@
 package com.ecit.ayden.tracker;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -30,30 +31,14 @@ public class LocProvider {
         tempID = 0;
     }
 
-    public void start(byte id) {
-        setTempID(id);
+    public void start() {
         locationClient.registerLocationListener(mListener);
         setOptions();
         locatingStart();
     }
 
-    public void setTempID(byte id) {
-        tempID = id;
-    }
-
-    public byte getTempID() {
-        return tempID;
-    }
-
-    public double getLongtitude() {
-        return longtitude;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
     private void locatingStart() {
+        Log.i("TEST", "locatingStart");
         locationClient.start();
     }
 
@@ -62,7 +47,8 @@ public class LocProvider {
         public void onReceiveLocation(BDLocation location) {
             longtitude = location.getLongitude();
             latitude = location.getLatitude();
-            byte[] locPackert = Packer.locPacket(longtitude, latitude, tempID);
+            byte[] locPackert = Packer.locPacket(longtitude, latitude);
+            Log.i("TEST", "LocProvider");
             PacketSpace.QueueAdd(locPackert);
         }
     }

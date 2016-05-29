@@ -1,5 +1,7 @@
 package com.ecit.ayden.tracker;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -11,7 +13,7 @@ import java.net.Socket;
  */
 public class Network {
 
-    private static final String ServerAddress = "121.40.234.38";
+    private static final String ServerAddress = "192.168.1.102";
     private static final int ServerPort = 1555;
     private  boolean connected;
     private  Socket socket;
@@ -65,13 +67,10 @@ public class Network {
      * Check connection status, try to reconnect
      * if its socket is in disconnected state.
      */
-    private void connectionChecking() {
-        if (socket.isClosed() || socket.isConnected())
-            connecting();
-    }
+
 
     public byte[] read() {
-        byte[] result = new byte[Packer.MAX_LENGTH_OF_PACKET];
+        byte[] result = new byte[Packer.LENGTH_OF_CONTROL_PACKET];
         if (in != null) {
             try {
                 in.read(result);
@@ -82,7 +81,7 @@ public class Network {
                  * it give a clean and easy to use interface to
                  * upper level.
                  */
-                e.printStackTrace();
+                return null;
             }
         } else {
             /* Method of in is non-initilize */
@@ -90,22 +89,17 @@ public class Network {
         return result;
     }
 
-    public void write(byte[] packet) {
-        if (out == null) {
+    public int write(byte[] packet) {
+        if (out != null) {
             try {
                 out.write(packet);
             } catch (IOException e) {
-                e.printStackTrace();
+                return -1;
             }
         } else {
             /* OutputStream object is null, write is impossible. */
-
+            return -2;
         }
+        return 0;
     }
 }
-
-
-
-
-
-

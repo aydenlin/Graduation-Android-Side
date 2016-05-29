@@ -18,4 +18,22 @@ public class Tools {
         box[7] = (byte)((val_long >> 56) & 0xff);
         return box;
     }
+    public static void Be2Le(byte[] bytes) {
+        int length = bytes.length;
+        int index = 0;
+        byte changer;
+
+        while (index < length/2) {
+            changer = bytes[index];
+            bytes[index] = bytes[length - index - 1];
+            bytes[length - index - 1] = changer;
+            index++;
+        }
+    }
+
+    public static void Sleeping() {
+        try {
+            Thread.sleep(5);
+        } catch (InterruptedException e) {}
+    }
 }

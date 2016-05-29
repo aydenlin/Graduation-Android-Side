@@ -1,5 +1,7 @@
 package com.ecit.ayden.tracker;
 
+import android.util.Log;
+
 /*
  *  Thread that deal with all works except locate and UI.
  *  so which is named Worker.
@@ -11,38 +13,48 @@ class Worker implements Runnable {
     private Network network;
     private Certification certification;
 
-    public Worker(CoreService coreService_, Network network_, Certification certification_,
-                  LocProvider locProvider_) {
+    public Worker(CoreService coreService_, Network network_, Certification certification_, LocProvider locProvider_) {
         network = network_;
         certification = certification_;
         coreService = coreService_;
         locProvider = locProvider_;
     }
 
-    private void authorize() {
+    private int authorize() {
+        Log.i("TEST","authorize");
+        int ret;
         /* method of register */
         byte flag = 0x00;
         byte[] fromServer = null;
         Redo:
         while (true) {
-            if (flag == 0x01) {
-                coreService.send("Please write down your info", coreService.CoreServiceDebugFilter);
-                // Loop to waiting for input.
-                while (certification.isNull()) {
-                }
+            // Loop to waiting for input.
+            while (certification.isNull()) {
+                Tools.Sleeping(); // Time interval is 5 sec
             }
-            network.write(Packer.userAndPass(certification.getUsername(), certification.getPassword(),
-                    certification.getIMEI()));
-            fromServer = network.read();
+            Log.i("TEST","In authorize after loop");
+            if ((ret = network.write(Packer.cerPackage(certification.getUsername(), certification.getPassword(),
+                    certification.getIMEI()))) != 0) {
+                if (ret == -1)
+                    Log.i("TEST", "write ioexception");
+                if (ret== -2)
+                    Log.i("TEST", "out is null");
+                return -1;
+            }
+            Log.i("TEST", "In authorize after network.write");
+            if ((fromServer = network.read()) == null) {
+                Log.i("TEST", "In authorize read failed");
+                return -1;
+            }
+            Log.i("TEST", "In authorize after network.read");
             if (Packer.getType(fromServer) == Packer.NAME_ALREADY_USED ||
                     Packer.getType(fromServer) == Packer.PASSWORD_ERROR) {
-                flag = 0x01;
+                coreService.send("Retype your pass quickly, if not hehe you know", CoreService.CoreServiceDebugFilter);
                 continue Redo;
             } else if (Packer.getType(fromServer) == Packer.CONFIRMED) {
-                certification.setTempID(fromServer[1]);
                 certification.save();
                 coreService.send("Confirmed", CoreService.CoreServiceDebugFilter);
-                return;
+                return 0;
             } else {
                 coreService.send("worng type of packet received", CoreService.CoreServiceDebugFilter);
             }
@@ -50,25 +62,37 @@ class Worker implements Runnable {
     }
 
     private void connect() {
+        Log.i("TEST","connect");
         network.connecting();
     }
 
-
-    private void work() {
+    private int work() {
+        Log.i("TEST","work");
         /* main working of worker thread */
-        locProvider.start(certification.getTempID());
+        locProvider.start();
+        Log.i("TEST", "locProvider start");
         while (true) {
-            network.write(PacketSpace.QueueRetrive());
-            try {
-                Thread.sleep(10000);
-            } catch (InterruptedException ie) {}
+            Log.i("TEST", "In work loop");
+            byte[] packet = null;
+
+            while (packet == null) {
+                Log.i("TEST", "In work wait packetspace");
+                packet = PacketSpace.QueueRetrive();
+            }
+            if (network.write(packet) != 0)
+                return -1;
         }
     }
 
     @Override
     public void run() {
-        connect();
-        authorize();
-        work();
+        while (true) {
+            Log.i("TEST","run");
+            connect();
+            if (authorize() == -1)
+                continue;
+            if (work() == -1)
+                continue;
+        }
     }
 }

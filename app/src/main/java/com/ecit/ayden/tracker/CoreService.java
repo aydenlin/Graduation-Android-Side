@@ -3,6 +3,7 @@ package com.ecit.ayden.tracker;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.TelephonyManager;
@@ -27,13 +28,27 @@ public class CoreService extends Service {
     private Certification certification;
     private Network network;
     private Thread worker;
+    private final IBinder mBinder = new coreBinder();
+    private TelephonyManager tm;
 
     public CoreService() {
         isStarted = false;
-        certification = new Certification((TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE));
-        locProvider = new LocProvider(CoreService.this);
+        certification = new Certification();
         network = new Network();
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
+    }
+
+    public class coreBinder extends Binder {
+        CoreService getService() {
+            return CoreService.this;
+        }
+    }
+
+    public void setLocProvider(Context context) {
+        locProvider = new LocProvider(context);
+    }
+
+    private void setWorker() {
         worker = new Thread(new Worker(this ,network, certification, locProvider));
     }
 
@@ -44,19 +59,42 @@ public class CoreService extends Service {
         localBroadcastManager.sendBroadcast(intent);
     }
 
-    private void start() {
+    public void start(Context context) {
+        if (isStarted)
+            return;
+        setLocProvider(context);
+        setWorker();
         worker.start();
+        isStarted = true;
+    }
+
+    public void setCertifiInfo(String username, String pass, String imei) {
+        setusername(username);
+        setPassword(pass);
+        setimei(imei);
+    }
+
+    private void setusername(String username) {
+        certification.setUsername(username);
+    }
+
+    private void setPassword(String pass) {
+        certification.setPassword(pass);
+    }
+
+    private void setimei(String imei) {
+        certification.setIMEI(imei);
+    }
+
+    public String getimei() {
+        return certification.getIMEI();
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (isStarted)
-            return START_STICKY;
-        start();
-        isStarted = true;
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
     public IBinder onBind(Intent intent) {
-        return null;
+        return mBinder;
     }
 }

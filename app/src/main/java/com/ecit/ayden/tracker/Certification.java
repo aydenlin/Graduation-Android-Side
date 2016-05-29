@@ -15,18 +15,14 @@ import java.io.IOException;
 public class Certification {
 
     private final String CERTIFICATION_PATH = "/sdcard/Tracker/Certification_info";
-    private String username;
-    private String password;
+    private String username = "aydenn";
+    private String password = "123456";
     private String IMEI;
-    private static byte tempID;
-    private TelephonyManager tm;
 
-    public Certification(TelephonyManager tm_) {
-        tm = tm_;
+    public Certification()  {
         username = null;
         password = null;
         IMEI = null;
-        tempID = 0x00;
     }
 
     public boolean isNull() {
@@ -75,19 +71,13 @@ public class Certification {
         }
     }
 
-    public String getIMEI() throws SecurityException {
-        try {
-            if (IMEI == null)
-                IMEI = tm.getDeviceId();
-            return IMEI;
-        } catch (SecurityException se) {
-            throw se;
-        }
+    public void setIMEI(String imei) {
+        IMEI = imei;
     }
 
-    public void setTempID(byte tempID_) { tempID = tempID_; }
-
-    public byte getTempID() { return tempID; }
+    public String getIMEI() {
+        return IMEI;
+    }
 
     public void setUsername(String username_) { username = username_; }
 
