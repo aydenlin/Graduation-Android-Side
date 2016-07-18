@@ -47,9 +47,9 @@ class Worker implements Runnable {
                 return -1;
             }
             Log.i("TEST", "In authorize after network.read");
-            if (Packer.getType(fromServer) == Packer.NAME_ALREADY_USED ||
-                    Packer.getType(fromServer) == Packer.PASSWORD_ERROR) {
+            if (Packer.getType(fromServer) == Packer.PASSWORD_ERROR) {
                 coreService.send("Retype your pass quickly, if not hehe you know", CoreService.CoreServiceDebugFilter);
+                certification.setNull();
                 continue Redo;
             } else if (Packer.getType(fromServer) == Packer.CONFIRMED) {
                 certification.save();

@@ -1,6 +1,7 @@
 package com.ecit.ayden.tracker;
 
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,15 +15,21 @@ import java.io.IOException;
  */
 public class Certification {
 
-    private final String CERTIFICATION_PATH = "/sdcard/Tracker/Certification_info";
-    private String username = "aydenn";
-    private String password = "123456";
+    private final String CERTIFICATION_PATH = "/sdcard/Tracker";
+    private final String CERTIFICATION_FILE = "/sdcard/Tracker/Certification_info";
+    private String username;
+    private String password;
     private String IMEI;
 
     public Certification()  {
         username = null;
         password = null;
         IMEI = null;
+    }
+
+    public void setNull() {
+        username = null;
+        password = null;
     }
 
     public boolean isNull() {
@@ -33,11 +40,14 @@ public class Certification {
     }
 
     public void save() {
-        File file = new File(CERTIFICATION_PATH);
+        File file = new File(CERTIFICATION_FILE);
+        File path = new File(CERTIFICATION_PATH);
         String newLine = "\n";
         try {
-            if (!file.exists())
+            if (!path.exists()) {
+                path.mkdirs();
                 file.createNewFile();
+            }
             FileOutputStream out = new FileOutputStream(file);
             out.write(username.getBytes());
             out.write(newLine.getBytes());
@@ -48,7 +58,7 @@ public class Certification {
     }
 
     public void load() {
-        File file = new File(CERTIFICATION_PATH);
+        File file = new File(CERTIFICATION_FILE);
 
         try {
             FileReader fileReader = new FileReader(file);
@@ -63,7 +73,7 @@ public class Certification {
     }
 
     public boolean check_file_exist() {
-        File file = new File(CERTIFICATION_PATH);
+        File file = new File(CERTIFICATION_FILE);
         if (file.exists()) {
             return true;
         } else {

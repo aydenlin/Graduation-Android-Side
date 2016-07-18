@@ -7,6 +7,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 /**
  * Created by ayden on 1/29/16.
@@ -62,6 +63,9 @@ public class CoreService extends Service {
     public void start(Context context) {
         if (isStarted)
             return;
+        if (certification.isNull()){
+            certification.load();
+        }
         setLocProvider(context);
         setWorker();
         worker.start();
@@ -71,6 +75,11 @@ public class CoreService extends Service {
     public void setCertifiInfo(String username, String pass, String imei) {
         setusername(username);
         setPassword(pass);
+        setimei(imei);
+        certification.save();
+    }
+
+    public void setIMEI(String imei) {
         setimei(imei);
     }
 

@@ -47,6 +47,9 @@ public class LocProvider {
         public void onReceiveLocation(BDLocation location) {
             longtitude = location.getLongitude();
             latitude = location.getLatitude();
+
+            Log.i("TEST", Integer.toString(location.getLocType()));
+
             byte[] locPackert = Packer.locPacket(longtitude, latitude);
             Log.i("TEST", "LocProvider");
             PacketSpace.QueueAdd(locPackert);

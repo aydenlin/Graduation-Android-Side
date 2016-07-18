@@ -8,12 +8,9 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-/**
- * Created by ayden on 1/26/16.
- */
 public class Network {
 
-    private static final String ServerAddress = "192.168.1.102";
+    private static final String ServerAddress = "115.159.149.197";
     private static final int ServerPort = 1555;
     private  boolean connected;
     private  Socket socket;
